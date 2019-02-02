@@ -11,10 +11,15 @@ namespace SportsStore.Models
         public DataContext(DbContextOptions<DataContext> options)
             : base(options) { }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Product>()
-                .ToTable("Product");
+                .ToTable("Product")
+                .Property(p => p.CategoryId)
+                .HasDefaultValue(0);
+            builder.Entity<Category>()
+                .ToTable("Category");
         }
     }
 }

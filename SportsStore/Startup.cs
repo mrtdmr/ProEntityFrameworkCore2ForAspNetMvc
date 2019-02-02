@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SportsStore.Models;
+using SportsStore.Models.Abstract;
+using SportsStore.Models.Concrete;
 
 namespace SportsStore
 {
@@ -22,7 +24,9 @@ namespace SportsStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddTransient<IRepository, DataRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRespository>();
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             string conString = Configuration["ConnectionStrings:SportsStoreSqlConnection"];
             services.AddDbContext<DataContext>(options =>
             {

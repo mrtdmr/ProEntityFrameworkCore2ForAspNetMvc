@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportsStore.Models;
+using SportsStore.Models.Abstract;
 
 namespace SportsStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IRepository _repository;
-        public HomeController(IRepository repository) => _repository = repository;
+        private readonly IProductRepository _repository;
+        public HomeController(IProductRepository repository) => _repository = repository;
         public IActionResult Index()
         {
             //Console.Clear();

@@ -1,14 +1,15 @@
-﻿using System;
+﻿using SportsStore.Models.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SportsStore.Models
+namespace SportsStore.Models.Concrete
 {
-    public class DataRepository : IRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly DataContext _dataContext;
-        public DataRepository(DataContext dataContext) => _dataContext = dataContext;
+        public ProductRepository(DataContext dataContext) => _dataContext = dataContext;
         public IEnumerable<Product> Products => _dataContext.Products.ToArray();//DbSet<T> yerine direk array döndürdük, Viewdaki Model.Count sorgusunu önlemek için.
         public async Task AddProduct(Product product)
         {
