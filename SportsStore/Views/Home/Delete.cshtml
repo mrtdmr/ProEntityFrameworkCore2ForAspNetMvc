@@ -1,0 +1,55 @@
+﻿@model SportsStore.Models.Product
+@{
+    ViewData["Title"] = "Delete";
+}
+<br />
+<h2>@Model.Name will be deleted?</h2>
+<br />
+<div class="row form-border">
+    <div class="col-4">
+        <form method="post" asp-action="Delete">
+            <br />
+            <input asp-for="Id" type="hidden" />
+            <fieldset disabled>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Name" class="custom-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Category" class="custom-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Category" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="PurchasePrice" class="custom-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="PurchasePrice" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="RetailPrice" class="custom-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="RetailPrice" class="form-control" />
+                    </div>
+                </div>
+            </fieldset>
+            <div class="col-1"></div>
+            <div class="col-8">
+                <input type="submit" value="Delete" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-success">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+

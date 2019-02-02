@@ -1,0 +1,34 @@
+﻿@model PartyInvites.Models.GuestResponse
+@{
+    ViewData["Title"] = "Respond";
+}
+
+<div class="bg-primary p-2 text-white text-center">
+    <h2>RSVP</h2>
+</div>
+<form method="post" asp-action="Respond" class="m-4">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="WillAttend"></label>
+        <select asp-for="WillAttend" class="form-control">
+            <option value="">Choose one option.</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Submit RSVP</button>
+    </div>
+</form>
+
