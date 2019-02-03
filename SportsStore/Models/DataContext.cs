@@ -12,6 +12,8 @@ namespace SportsStore.Models
             : base(options) { }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderLine> OrderLines { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Product>()
@@ -20,6 +22,10 @@ namespace SportsStore.Models
                 .HasDefaultValue(0);
             builder.Entity<Category>()
                 .ToTable("Category");
+            builder.Entity<Order>()
+                .ToTable("Order");
+            builder.Entity<OrderLine>()
+                .ToTable("OrderLine");
         }
     }
 }

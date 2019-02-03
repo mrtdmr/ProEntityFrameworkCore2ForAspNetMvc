@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SportsStore.Models;
-using SportsStore.Models.Abstract;
-using SportsStore.Models.Concrete;
+using SportsStore.Repositories.Abstract;
+using SportsStore.Repositories.Concrete;
 
 namespace SportsStore
 {
@@ -24,8 +19,6 @@ namespace SportsStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddTransient<IProductRepository, ProductRepository>();
-            services.AddTransient<ICategoryRepository, CategoryRespository>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             string conString = Configuration["ConnectionStrings:SportsStoreSqlConnection"];
             services.AddDbContext<DataContext>(options =>

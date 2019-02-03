@@ -1,25 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SportsStore.Models;
-using SportsStore.Models.Abstract;
+using SportsStore.Repositories.Abstract;
 
 namespace SportsStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IProductRepository _repository;
-        public HomeController(IProductRepository repository) => _repository = repository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Category> _categoryRepository;
+        public HomeController(IRepository<Product> pRepository, IRepository<Category> cRepository)
+        {
+            _productRepository = pRepository;
+            _categoryRepository = cRepository;
+        }
         public IActionResult Index()
         {
             //Console.Clear();
-            return View(_repository.Products);
+            return View(_productRepository.GetAll("Category"));
         }
         [HttpGet]
         public IActionResult Create()
         {
+            ViewBag.Categories = _categoryRepository.GetAll().ToList();
             return View();
         }
         [HttpPost]
@@ -28,15 +33,17 @@ namespace SportsStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _repository.AddProduct(product);
+                await _productRepository.Add(product);
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Categories = _categoryRepository.GetAll().ToList();
             return View(product);
         }
         [HttpGet]
         public async Task<IActionResult> Edit(long id)
         {
-            return View(await _repository.GetProduct(id));
+            ViewBag.Categories = _categoryRepository.GetAll();
+            return View(await _productRepository.GetById(id));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -44,7 +51,7 @@ namespace SportsStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _repository.UpdateProduct(product);
+                await _productRepository.Update(product);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -52,7 +59,7 @@ namespace SportsStore.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(long id)
         {
-            return View(await _repository.GetProduct(id));
+            return View(await _productRepository.GetById(p => p.Id == id, "Category"));
         }
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -60,7 +67,7 @@ namespace SportsStore.Controllers
         {
             if (product.Id != 0)
             {
-                await _repository.DeleteProduct(product);
+                await _productRepository.Delete(product);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);

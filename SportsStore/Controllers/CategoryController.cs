@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportsStore.Models;
-using SportsStore.Models.Abstract;
+using SportsStore.Repositories.Abstract;
 
 namespace SportsStore.Controllers
 {
@@ -12,7 +9,7 @@ namespace SportsStore.Controllers
     {
         private readonly IRepository<Category> _repository;
         public CategoryController(IRepository<Category> repository) => _repository = repository;
-        public IActionResult Index() => View(_repository.GetAll);
+        public IActionResult Index() => View(_repository.GetAll());
         [HttpGet]
         public IActionResult Create() => View();
         [HttpPost]
@@ -39,5 +36,64 @@ namespace SportsStore.Controllers
             }
             return View(category);
         }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id) => View(await _repository.GetById(id));
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Category category)
+        {
+            await _repository.Delete(category);
+            return RedirectToAction(nameof(Index));
+        }
+
+        #region SinglePageCrud
+        /*
+        public async Task<IActionResult> Index(int? id)
+        {
+            CategoryViewModel categoryViewModel = new CategoryViewModel
+            {
+                TheCategories = _repository.GetAll,
+                TheCategory = id != null ? await _repository.GetById(id) : new Category()
+            };
+            return View("Category", categoryViewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveOrUpdate(CategoryViewModel category)
+        {
+            if (ModelState.IsValid)
+            {
+                if (category.TheCategory.Id != 0)
+                {
+                    await _repository.Update(category.TheCategory);
+                }
+                else
+                {
+                    await _repository.Add(category.TheCategory);
+                }
+                return RedirectToAction(nameof(Index), new { id = category.TheCategory.Id });
+            }
+            category.TheCategories = _repository.GetAll;
+            return View("Category", category);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            CategoryViewModel categoryViewModel = new CategoryViewModel
+            {
+                TheCategories = _repository.GetAll,
+                TheCategory = await _repository.GetById(id)
+            };
+            return View("Category", categoryViewModel);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var category =await _repository.GetById(id);
+            await _repository.Delete(category);
+            return RedirectToAction(nameof(Index));
+        }
+        */
+        #endregion
     }
 }

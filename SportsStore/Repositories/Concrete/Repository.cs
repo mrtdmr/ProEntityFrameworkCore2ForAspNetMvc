@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SportsStore.Models.Abstract;
+using SportsStore.Models;
+using SportsStore.Repositories.Abstract;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace SportsStore.Models.Concrete
+namespace SportsStore.Repositories.Concrete
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -16,7 +17,25 @@ namespace SportsStore.Models.Concrete
             _dataContext = dataContext;
             _dbSet = dataContext.Set<T>();
         }
-        public IQueryable<T> GetAll => _dbSet;
+        public IQueryable<T> GetAll() => _dbSet;
+        public IQueryable<T> GetAll(params object[] includeParams)
+        {
+            var query = _dbSet.AsQueryable();
+            foreach (var item in includeParams)
+            {
+                query = query.Include(item.ToString());
+            }
+            return query.AsQueryable();
+        }
+        public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate, params object[] includeParams)
+        {
+            var query = _dbSet.AsQueryable();
+            foreach (var item in includeParams)
+            {
+                query = query.Include(item.ToString());
+            }
+            return query.Where(predicate).AsQueryable();
+        }
         public async Task<T> GetById(long id)
         {
             try
@@ -40,6 +59,15 @@ namespace SportsStore.Models.Concrete
 
                 throw;
             }
+        }
+        public async Task<T> GetById(Expression<Func<T, bool>> predicate, params object[] includeParams)
+        {
+            var query = _dbSet.AsQueryable();
+            foreach (var item in includeParams)
+            {
+                query = query.Include(item.ToString());
+            }
+            return await query.Where(predicate).FirstOrDefaultAsync();
         }
         public async Task Add(T entity)
         {
@@ -90,5 +118,6 @@ namespace SportsStore.Models.Concrete
                 throw;
             }
         }
+        
     }
 }
