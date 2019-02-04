@@ -10,6 +10,14 @@
 <p>
     @Html.Partial("_CreateButtonPartial")
 </p>
+<div class="text-center">
+    @Html.Partial("_PagesPartial", Model)
+    @{
+        ViewBag.searches = new string[] { "Name", "Category.Name" };
+        ViewBag.sorts = new string[] { "Name", "Category.Name", "PurchasePrice", "RetailPrice" };
+    }
+    @Html.Partial("_PageOptionPartial", Model)
+</div>
 <div class="form-border">
     <table class="table table-striped">
         <thead>

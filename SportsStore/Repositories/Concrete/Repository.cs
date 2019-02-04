@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SportsStore.Models;
+using SportsStore.Models.Pages;
 using SportsStore.Repositories.Abstract;
 using System;
 using System.Linq;
@@ -35,6 +36,15 @@ namespace SportsStore.Repositories.Concrete
                 query = query.Include(item.ToString());
             }
             return query.Where(predicate).AsQueryable();
+        }
+        public PagedList<T> GetAll(QueryOption option, params object[] includeParams)
+        {
+            var query = _dbSet.AsQueryable();
+            foreach (var item in includeParams)
+            {
+                query = query.Include(item.ToString());
+            }
+            return new PagedList<T>(query, option);
         }
         public async Task<T> GetById(long id)
         {
@@ -118,6 +128,5 @@ namespace SportsStore.Repositories.Concrete
                 throw;
             }
         }
-        
     }
 }

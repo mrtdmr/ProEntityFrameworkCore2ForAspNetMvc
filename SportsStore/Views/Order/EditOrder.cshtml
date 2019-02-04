@@ -1,0 +1,81 @@
+﻿@model SportsStore.Models.Order
+@{
+    ViewData["Title"] = "EditOrder";
+}
+
+<h3 class="p-2 bg-primary text-white text-center">Create/Update Order</h3>
+<br />
+<div class="form-border">
+    <form method="post" asp-action="AddOrUpdateOrder">
+        <div class="col-6">
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="CustomerName" class="custom-label"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="CustomerName" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="Address" class="custom-label"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Address" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="State" class="custom-label"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="State" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="ZipCode" class="custom-label"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ZipCode" class="form-control" />
+                </div>
+            </div>
+            <div class="form-check row">
+                <label class="form-check-label">
+                    <input type="checkbox" asp-for="Shipped" class="form-check-input" />
+                    Shipped
+                </label>
+            </div>
+            <h6 class="mt-1 p-2 bg-primary text-white text-center">Products Ordered</h6>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col font-weight-bold">Product</div>
+                    <div class="col font-weight-bold">Category</div>
+                    <div class="col font-weight-bold">Quantity</div>
+                </div>
+                @{ int counter = 0; }
+                @foreach (OrderLine line in ViewBag.Lines)
+                {
+                    <input type="hidden" name="lines[@counter].Id" value="@line.Id" />
+                    <input type="hidden" name="lines[@counter].ProductId"
+                           value="@line.ProductId" />
+                    <input type="hidden" name="lines[@counter].OrderId" value="@Model.Id" />
+                    <div class="row mt-1">
+                        <div class="col">@line.Product.Name</div>
+                        <div class="col">@line.Product.Category.Name</div>
+                        <div class="col">
+                            <input type="number" name="lines[@counter].Quantity" class="form-control"
+                                   value="@line.Quantity" />
+                        </div>
+                    </div>
+                    counter++;
+                }
+            </div>
+            <div class="text-center m-2">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+

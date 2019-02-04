@@ -11,7 +11,7 @@ namespace SportsStore.Models
         [Required]
         public int Id { get; set; }
         [Required(ErrorMessage ="*")]
-        [Display(Name ="Name")]
+        [Display(Name ="Category Name")]
         public string Name { get; set; }
         [Required(ErrorMessage = "*")]
         [Display(Name = "Description")]

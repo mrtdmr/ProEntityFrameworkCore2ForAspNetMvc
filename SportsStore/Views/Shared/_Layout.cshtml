@@ -8,8 +8,37 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 </head>
 <body>
-    <div class="p-2">
-        @RenderBody()
+    <div class="container-fluid">
+        <div class="row p-2">
+            <div class="col-2">
+                <a asp-controller="Home" asp-action="Index"
+                   class="@GetClassForButton("Home")">
+                    Products
+                </a>
+                <a asp-controller="Category" asp-action="Index"
+                   class="@GetClassForButton("Category")">
+                    Categories
+                </a>
+                <a asp-controller="Order" asp-action="Index"
+                   class="@GetClassForButton("Order")">
+                    Orders
+                </a>
+                <a asp-controller="Seed" asp-action="Index"
+                   class="@GetClassForButton("Seed")">
+                    Seed Data
+                </a>
+            </div>
+            <div class="col">
+                @RenderBody()
+            </div>
+        </div>
     </div>
 </body>
 </html>
+@functions{
+    string GetClassForButton(string controller)
+    {
+        return "btn btn-block " + (ViewContext.RouteData.Values["controller"]
+        as string == controller ? "btn-primary" : "btn-outline-primary");
+    }
+}

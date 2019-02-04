@@ -24,6 +24,7 @@ namespace SportsStore
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(conString);
+                options.EnableSensitiveDataLogging(true);
             });
         }
 

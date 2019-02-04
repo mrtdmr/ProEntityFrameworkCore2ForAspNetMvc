@@ -12,7 +12,7 @@ namespace SportsStore.Models
         [Required]
         public long Id { get; set; }
         [Required]
-        [Display(Name = "Name")]
+        [Display(Name = "Product Name")]
         public string Name { get; set; }
         [Required]
         [Display(Name = "Purchase Price")]

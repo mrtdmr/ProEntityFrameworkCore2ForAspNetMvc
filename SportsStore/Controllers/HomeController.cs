@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SportsStore.Models;
+using SportsStore.Models.Pages;
 using SportsStore.Repositories.Abstract;
 
 namespace SportsStore.Controllers
@@ -16,10 +17,11 @@ namespace SportsStore.Controllers
             _productRepository = pRepository;
             _categoryRepository = cRepository;
         }
-        public IActionResult Index()
+        public IActionResult Index(QueryOption option)
         {
             //Console.Clear();
-            return View(_productRepository.GetAll("Category"));
+            var pro = _productRepository.GetAll(option, "Category");
+            return View(pro);
         }
         [HttpGet]
         public IActionResult Create()
