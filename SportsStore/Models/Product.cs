@@ -14,6 +14,8 @@ namespace SportsStore.Models
         [Required]
         [Display(Name = "Product Name")]
         public string Name { get; set; }
+        [Display(Name = "Description")]
+        public string Description { get; set; }
         [Required]
         [Display(Name = "Purchase Price")]
         public decimal PurchasePrice { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportsStore.Models;
+using SportsStore.Models.Pages;
 using SportsStore.Repositories.Abstract;
 
 namespace SportsStore.Controllers
@@ -9,7 +10,7 @@ namespace SportsStore.Controllers
     {
         private readonly IRepository<Category> _repository;
         public CategoryController(IRepository<Category> repository) => _repository = repository;
-        public IActionResult Index() => View(_repository.GetAll());
+        public IActionResult Index(QueryOption option) => View(_repository.GetAll(option));
         [HttpGet]
         public IActionResult Create() => View();
         [HttpPost]

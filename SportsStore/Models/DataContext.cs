@@ -16,16 +16,18 @@ namespace SportsStore.Models
         public DbSet<OrderLine> OrderLines { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Product>()
-                .ToTable("Product")
-                .Property(p => p.CategoryId)
-                .HasDefaultValue(0);
-            builder.Entity<Category>()
-                .ToTable("Category");
-            builder.Entity<Order>()
-                .ToTable("Order");
-            builder.Entity<OrderLine>()
-                .ToTable("OrderLine");
+            builder.Entity<Product>().ToTable("Product");
+            builder.Entity<Product>().HasIndex(p => p.Name);
+            builder.Entity<Product>().HasIndex(p => p.PurchasePrice);
+            builder.Entity<Product>().HasIndex(p => p.RetailPrice);
+
+            builder.Entity<Category>().ToTable("Category");
+            builder.Entity<Category>().HasIndex(c => c.Name);
+            builder.Entity<Category>().HasIndex(c => c.Description);
+
+            builder.Entity<Order>().ToTable("Order");
+
+            builder.Entity<OrderLine>().ToTable("OrderLine");
         }
     }
 }

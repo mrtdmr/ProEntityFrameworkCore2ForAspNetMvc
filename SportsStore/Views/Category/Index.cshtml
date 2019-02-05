@@ -5,6 +5,16 @@
 <h2>Categories</h2>
 <br />
 @Html.Partial("_CreateButtonPartial")
+<br />
+<div class="text-center">
+    @Html.Partial("_PagesPartial", Model)
+    @{
+        ViewBag.searches = new string[] { "Name", "Category.Name" };
+        ViewBag.sorts = new string[] { "Name", "Category.Name", "PurchasePrice", "RetailPrice" };
+    }
+    @Html.Partial("_PageOptionPartial", Model)
+</div>
+
 <div class="form-border">
     <table class="table table-striped">
         <thead>
@@ -17,11 +27,11 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>@Html.DisplayFor(m => item.Name)</td>
-                <td>@Html.DisplayFor(m => item.Description)</td>
-                @Html.Partial("_TableButtonPartial", (long)item.Id)
-            </tr>
+                <tr>
+                    <td>@Html.DisplayFor(m => item.Name)</td>
+                    <td>@Html.DisplayFor(m => item.Description)</td>
+                    @Html.Partial("_TableButtonPartial", (long)item.Id)
+                </tr>
             }
         </tbody>
     </table>

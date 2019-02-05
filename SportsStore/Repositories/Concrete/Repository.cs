@@ -37,6 +37,10 @@ namespace SportsStore.Repositories.Concrete
             }
             return query.Where(predicate).AsQueryable();
         }
+        public PagedList<T> GetAll(QueryOption option)
+        {
+            return new PagedList<T>(_dbSet, option);
+        }
         public PagedList<T> GetAll(QueryOption option, params object[] includeParams)
         {
             var query = _dbSet.AsQueryable();
@@ -45,6 +49,20 @@ namespace SportsStore.Repositories.Concrete
                 query = query.Include(item.ToString());
             }
             return new PagedList<T>(query, option);
+        }
+        public PagedList<T> GetAll(Expression<Func<T, bool>> predicate, QueryOption option)
+        {
+            var query = _dbSet.AsQueryable();
+            return new PagedList<T>(query.Where(predicate), option);
+        }
+        public PagedList<T> GetAll(Expression<Func<T, bool>> predicate, QueryOption option, params object[] includeParams)
+        {
+            var query = _dbSet.AsQueryable();
+            foreach (var item in includeParams)
+            {
+                query = query.Include(item.ToString());
+            }
+            return new PagedList<T>(query.Where(predicate), option);
         }
         public async Task<T> GetById(long id)
         {

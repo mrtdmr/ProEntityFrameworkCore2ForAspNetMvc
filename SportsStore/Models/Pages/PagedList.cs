@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -26,10 +27,13 @@ namespace SportsStore.Models.Pages
                     option.SearchTerm);
                 }
             }
+            //Stopwatch sw = Stopwatch.StartNew();
+            //Console.Clear();
             var tPage = query.Count() / PageSize;
             TotalPage = tPage < 1 ? 1 : tPage;
             CurrentPage = option.CurrentPage < 1 ? 1 : option.CurrentPage > TotalPage ? TotalPage : option.CurrentPage;
             AddRange(query.Skip((CurrentPage - 1) * PageSize).Take(PageSize));
+            //Console.WriteLine($"Query Time : {sw.ElapsedMilliseconds} ms");
         }
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
@@ -49,18 +53,9 @@ namespace SportsStore.Models.Pages
 bool desc)
         {
             var parameter = Expression.Parameter(typeof(T), "x");
-            var source = propertyName.Split('.').Aggregate((Expression)parameter,
-            Expression.Property);
-            var lambda = Expression.Lambda(typeof(Func<,>).MakeGenericType(typeof(T),
-            source.Type), source, parameter);
-            return typeof(Queryable).GetMethods().Single(
-            method => method.Name == (desc ? "OrderByDescending"
-            : "OrderBy")
-            && method.IsGenericMethodDefinition
-            && method.GetGenericArguments().Length == 2
-            && method.GetParameters().Length == 2)
-            .MakeGenericMethod(typeof(T), source.Type)
-            .Invoke(null, new object[] { query, lambda }) as IQueryable<T>;
+            var source = propertyName.Split('.').Aggregate((Expression)parameter, Expression.Property);
+            var lambda = Expression.Lambda(typeof(Func<,>).MakeGenericType(typeof(T), source.Type), source, parameter);
+            return typeof(Queryable).GetMethods().Single(method => method.Name == (desc ? "OrderByDescending" : "OrderBy") && method.IsGenericMethodDefinition && method.GetGenericArguments().Length == 2 && method.GetParameters().Length == 2).MakeGenericMethod(typeof(T), source.Type).Invoke(null, new object[] { query, lambda }) as IQueryable<T>;
         }
     }
 }

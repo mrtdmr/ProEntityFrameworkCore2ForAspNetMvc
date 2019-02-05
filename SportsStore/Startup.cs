@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using SportsStore.Models;
 using SportsStore.Repositories.Abstract;
 using SportsStore.Repositories.Concrete;
@@ -18,14 +19,27 @@ namespace SportsStore
         public Startup(IConfiguration _configuration) => Configuration = _configuration;
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IWebServiceRepository, WebServiceRepository>();
             string conString = Configuration["ConnectionStrings:SportsStoreSqlConnection"];
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(conString);
                 options.EnableSensitiveDataLogging(true);
             });
+            services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = conString;
+                options.SchemaName = "dbo";
+                options.TableName = "SessionData";
+            });
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = "SportsStore.Session";
+                options.IdleTimeout = System.TimeSpan.FromHours(48);
+                options.Cookie.HttpOnly = false;
+            });
+            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +48,7 @@ namespace SportsStore
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseStaticFiles();
+            app.UseSession();
             var supportedCultures = new[]
 {
     new CultureInfo("tr-TR"),

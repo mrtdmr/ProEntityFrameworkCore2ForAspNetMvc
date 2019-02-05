@@ -11,9 +11,10 @@ using System;
 namespace SportsStore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190205165553_addIndexToDb")]
+    partial class addIndexToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,8 +88,6 @@ namespace SportsStore.Migrations
 
                     b.Property<int>("CategoryId");
 
-                    b.Property<string>("Description");
-
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -125,7 +124,7 @@ namespace SportsStore.Migrations
             modelBuilder.Entity("SportsStore.Models.Product", b =>
                 {
                     b.HasOne("SportsStore.Models.Category", "Category")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
