@@ -1,0 +1,75 @@
+﻿@model IEnumerable<DataApp.Models.Product>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+}
+
+<h2>Products</h2>
+<div class="form-border">
+    <div class="row">
+        <div class="col-6">
+            <form asp-action="Index" method="get">
+                <div class="form-group row">
+                    <div class="col-2">
+                        <label asp-for="@Model.FirstOrDefault().Category" class="custom-label"></label>
+                    </div>
+                    <div class="col-4">
+                        <select name="category" class="form-control">
+                            <option value="">All</option>
+                            <option selected="@(ViewBag.category == "Watersports")">
+                                Watersports
+                            </option>
+                            <option selected="@(ViewBag.category == "Soccer")">Soccer</option>
+                            <option selected="@(ViewBag.category == "Chess")">Chess</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-2">
+                        <label asp-for="@Model.FirstOrDefault().Price" class="custom-label" value="@ViewBag.price"></label>
+                    </div>
+                    <div class="col-4">
+                        <input name="price" class="form-control" />
+                    </div>
+                </div>
+                <button class="btn btn-primary m-1">Filter</button>
+            </form>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Id)</th>
+                <th>@Html.DisplayNameFor(m => m.Name)</th>
+                <th>@Html.DisplayNameFor(m => m.Category)</th>
+                <th>@Html.DisplayNameFor(m => m.Price)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(m => p.Id)</td>
+                    <td>@Html.DisplayFor(m => p.Name)</td>
+                    <td>@Html.DisplayFor(m => p.Category)</td>
+                    <td>@Html.DisplayFor(m => p.Price)</td>
+                    <td>
+                    <td>
+                        <form asp-action="Delete" method="post">
+                            <a asp-action="Edit"
+                               class="btn btn-sm btn-warning" asp-route-id="@p.Id">
+                                Edit
+                            </a>
+                            <input type="hidden" name="id" value="@p.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="Create" class="btn btn-primary">Create New Product</a>
+</div>
