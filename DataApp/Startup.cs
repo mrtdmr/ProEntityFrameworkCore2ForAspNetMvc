@@ -26,15 +26,26 @@ namespace DataApp
             {
                 options.UseSqlServer(connString);
             });
+            string customerConnString = Configuration["ConnectionStrings:CustomerConnection"];
+            services.AddDbContext<EFCustomerContext>(options =>
+            {
+                options.UseSqlServer(customerConnString);
+            });
+            services.AddTransient<MigrationsManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, EFDatabaseContext prodCtx, EFCustomerContext custCtx)
         {
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
+            if (env.IsDevelopment())
+            {
+                SeedData.Seed(prodCtx);
+                SeedData.Seed(custCtx);
+            }
         }
     }
 }
