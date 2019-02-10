@@ -16,6 +16,7 @@ namespace DataApp.Models
                 && prodCtx.Products.Count() == 0)
                 {
                     prodCtx.Products.AddRange(Products);
+                    prodCtx.Set<Shipment>().AddRange(Shipments);
                 }
                 else if (context is EFCustomerContext custCtx
               && custCtx.Customers.Count() == 0)
@@ -31,6 +32,7 @@ namespace DataApp.Models
             && prodCtx.Products.Count() > 0)
             {
                 prodCtx.Products.RemoveRange(prodCtx.Products);
+                prodCtx.Set<Shipment>().RemoveRange(prodCtx.Set<Shipment>());
             }
             else if (context is EFCustomerContext custCtx
           && custCtx.Customers.Count() > 0)
@@ -39,7 +41,25 @@ namespace DataApp.Models
             }
             context.SaveChanges();
         }
-        private static Product[] Products = {
+        public static Shipment[] Shipments
+        {
+            get
+            {
+                return new Shipment[] {
+new Shipment { ShipperName = "Express Co",
+StartCity = "New York", EndCity = "San Jose"},
+new Shipment { ShipperName = "Tortoise Shipping",
+StartCity = "Boston", EndCity = "Chicago"},
+new Shipment { ShipperName = "Air Express",
+StartCity = "Miami", EndCity = "Seattle"}
+};
+            }
+        }
+        private static Product[] Products
+        {
+            get
+            {
+                Product[] products = new Product[] {
 new Product { Name = "Kayak", Category = "Watersports",
 Price = 275, Color = Colors.Green, InStock = true },
 new Product { Name = "Lifejacket", Category = "Watersports",
@@ -58,6 +78,54 @@ new Product { Name = "Human Chess Board", Category = "Chess",
 Price = 75, Color = Colors.Red, InStock = true },
 new Product { Name = "Bling-Bling King", Category = "Chess",
 Price = 1200, Color = Colors.Blue, InStock = true }};
+                ContactLocation hq = new ContactLocation
+                {
+                    LocationName = "Corporate HQ",
+                    Address = "200 Acme Way"
+                };
+                ContactDetails bob = new ContactDetails
+                {
+                    Name = "Bob Smith",
+                    Phone = "555-107-1234",
+                    Location = hq
+                };
+                Supplier acme = new Supplier
+                {
+                    Name = "Acme Co",
+                    City = "New York",
+                    State = "NY",
+                    Contact = bob
+                };
+                Supplier s1 = new Supplier
+                {
+                    Name = "Surf Dudes",
+                    City = "San Jose",
+                    State = "CA"
+                };
+                Supplier s2 = new Supplier
+                {
+                    Name = "Chess Kings",
+                    City = "Seattle",
+                    State = "WA"
+                };
+                foreach (Product p in products)
+                {
+                    if (p == products[0])
+                    {
+                        p.Supplier = s1;
+                    }
+                    else if (p.Category == "Chess")
+                    {
+                        p.Supplier = s2;
+                    }
+                    else
+                    {
+                        p.Supplier = acme;
+                    }
+                }
+                return products;
+            }
+        }
         private static Customer[] Customers = {
 new Customer { Name = "Alice Smith",
 City = "New York", Country = "USA" },

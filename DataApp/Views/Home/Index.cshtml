@@ -43,6 +43,7 @@
                 <th>@Html.DisplayNameFor(m => m.Name)</th>
                 <th>@Html.DisplayNameFor(m => m.Category)</th>
                 <th>@Html.DisplayNameFor(m => m.Price)</th>
+                <th>@Html.DisplayNameFor(m => m.Supplier)</th>
                 <th></th>
             </tr>
         </thead>
@@ -54,7 +55,7 @@
                     <td>@Html.DisplayFor(m => p.Name)</td>
                     <td>@Html.DisplayFor(m => p.Category)</td>
                     <td>@Html.DisplayFor(m => p.Price)</td>
-                    <td>
+                    <td>@Html.DisplayFor(m => p.Supplier.Name)</td>
                     <td>
                         <form asp-action="Delete" method="post">
                             <a asp-action="Edit"

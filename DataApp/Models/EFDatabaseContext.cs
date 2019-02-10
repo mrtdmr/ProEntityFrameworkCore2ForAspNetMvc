@@ -11,5 +11,6 @@ namespace DataApp.Models
         public EFDatabaseContext(DbContextOptions<EFDatabaseContext> options)
             : base(options) { }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
     }
 }

@@ -2,21 +2,25 @@
 using DataApp.Models;
 using DataApp.Repositories.DataRepository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IRepository<Product> _productRepository;
-        public HomeController(IRepository<Product> productRepository)
+        private EFDatabaseContext ctx;
+        public HomeController(IRepository<Product> productRepository, EFDatabaseContext c)
         {
             _productRepository = productRepository;
+            ctx = c;
         }
         public IActionResult Index(string category = null, decimal? price = null)
         {
             //var products = _productRepository.GetAll().Where(p => p.Price > 25).ToArray();//IEnumarable<T> önce tüm datayı çeker, daha sonra MVC tarafında filtreler. Performans olarak zararlı. IQueryable<T> ise sorguyu DB düzeyinde çeker. IQueryable<T> interface sinin olabilecek dezavantajı ise farkında olmadan birden fazla sorgu çekilmesi riskidir. Örneğin alttaki products.Count() bilgisi için EF tarafından DB ye fazladan 1 sorgu daha çekilir. Bunu önlemek için de dönen veriyi veri setine dönüştürmeye zorlanır. Bunu da ToArray() veya ToList() metodlarıyla yapabiliriz.
             //ViewBag.ProductCount = products.Count();
-            var products = _productRepository.GetAll();
+
+            var products = _productRepository.GetList().Include("Supplier").Include(p=>p.Supplier.Contact).Include("Supplier.Contact.Location");
             if (category != null)
             {
                 products = products.Where(p => p.Category == category);
@@ -43,12 +47,12 @@ namespace DataApp.Controllers
         public IActionResult Edit(long id)
         {
             ViewBag.CreateMode = false;
-            return View("Editor", _productRepository.Get(id));
+            return View("Editor", _productRepository.GetList().Where(p => p.Id == id).Include("Supplier").Include("Supplier.Contact").Include("Supplier.Contact.Location").FirstOrDefault());
         }
         [HttpPost]
-        public IActionResult Edit(Product product,Product original)
+        public IActionResult Edit(Product product, Product original)
         {
-            _productRepository.Update(product,original);
+            _productRepository.Update(product, original);
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]

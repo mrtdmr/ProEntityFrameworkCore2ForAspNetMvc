@@ -25,11 +25,13 @@ namespace DataApp
             services.AddDbContext<EFDatabaseContext>(options =>
             {
                 options.UseSqlServer(connString);
+                options.EnableSensitiveDataLogging(true);
             });
             string customerConnString = Configuration["ConnectionStrings:CustomerConnection"];
             services.AddDbContext<EFCustomerContext>(options =>
             {
                 options.UseSqlServer(customerConnString);
+                options.EnableSensitiveDataLogging(true);
             });
             services.AddTransient<MigrationsManager>();
         }

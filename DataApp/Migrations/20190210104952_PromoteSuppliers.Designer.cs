@@ -11,9 +11,10 @@ using System;
 namespace DataApp.Migrations
 {
     [DbContext(typeof(EFDatabaseContext))]
-    partial class EFDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20190210104952_PromoteSuppliers")]
+    partial class PromoteSuppliers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,14 +32,9 @@ namespace DataApp.Migrations
 
                     b.Property<string>("Phone");
 
-                    b.Property<long>("SupplierId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("LocationId");
-
-                    b.HasIndex("SupplierId")
-                        .IsUnique();
 
                     b.ToTable("ContactDetails");
                 });
@@ -81,40 +77,6 @@ namespace DataApp.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("DataApp.Models.ProductShipmentJunction", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("ProductId");
-
-                    b.Property<long>("ShipmentId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ShipmentId");
-
-                    b.ToTable("ProductShipmentJunction");
-                });
-
-            modelBuilder.Entity("DataApp.Models.Shipment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("EndCity");
-
-                    b.Property<string>("ShipperName");
-
-                    b.Property<string>("StartCity");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Shipment");
-                });
-
             modelBuilder.Entity("DataApp.Models.Supplier", b =>
                 {
                     b.Property<long>("Id")
@@ -122,11 +84,15 @@ namespace DataApp.Migrations
 
                     b.Property<string>("City");
 
+                    b.Property<long?>("ContactId");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("State");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
 
                     b.ToTable("Suppliers");
                 });
@@ -136,32 +102,21 @@ namespace DataApp.Migrations
                     b.HasOne("DataApp.Models.ContactLocation", "Location")
                         .WithMany()
                         .HasForeignKey("LocationId");
-
-                    b.HasOne("DataApp.Models.Supplier", "Supplier")
-                        .WithOne("Contact")
-                        .HasForeignKey("DataApp.Models.ContactDetails", "SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataApp.Models.Product", b =>
                 {
                     b.HasOne("DataApp.Models.Supplier", "Supplier")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DataApp.Models.ProductShipmentJunction", b =>
+            modelBuilder.Entity("DataApp.Models.Supplier", b =>
                 {
-                    b.HasOne("DataApp.Models.Product", "Product")
-                        .WithMany("ProductShipments")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataApp.Models.Shipment", "Shipment")
-                        .WithMany("ProductShipments")
-                        .HasForeignKey("ShipmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("DataApp.Models.ContactDetails", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId");
                 });
 #pragma warning restore 612, 618
         }
