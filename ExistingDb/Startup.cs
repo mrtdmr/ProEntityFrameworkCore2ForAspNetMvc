@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ExistingDb.Models.Manual;
 using ExistingDb.Models.Scaffold;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +24,9 @@ namespace ExistingDb
             services.AddMvc();
             string conString = Configuration["ConnectionStrings:DefaultConnection"];
             services.AddDbContext<ScaffoldContext>(options =>
-            options.UseSqlServer(conString));
+                options.UseSqlServer(conString));
+            services.AddDbContext<ManualContext>(options =>
+                options.UseSqlServer(conString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
